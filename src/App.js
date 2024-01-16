@@ -7,13 +7,15 @@ import {useState} from 'react';
 //import data from './data'; 
 import 초기게시글 from './data';  //default옵션으로 export한 경우 변수명을 다르게 가져올 수 있음
 import {a,b,c} from './data'; //a,b,c의 값을 가지고 옴
-import BoardInsert from './components/BoardInsert';
+import BoardInsert from './pages/BoardInsert';
+import BoardList from './pages/BoardList';
+import BoardDetail from './pages/BoardDetail';
+import BoardUpdate from './pages/BoardUpdate';
+import { Route, Routes, Link } from 'react-router-dom';
 
 
 function App() {
-
-  let 제목 = "KH C CLASS";
-
+  
   // state 문법
   let [제목2, 제목변경함수]  = useState('KH E CLASS'); 
   // let [title, setTitle]  관례
@@ -34,48 +36,36 @@ function App() {
      1번 인덱스에 있는 값을 제목변경함수에 각각 할당한 것
   */
 
-    let [게시글배열, 게시글배열변경함수] = useState(초기게시글);
+  
+  /* 
+    ui 상태 관리하는법
+    1) 전환할 컴포넌트 준비하기(BoardInsert, BoardList)
+    2) 레이아웃 상태를 state로 저장시키기
+    3) state 변경 함수를 버튼등의 요소에 부여
+    4) state의 변경에 따른 레이아웃 지정 
+  */ 
+
+  // 2) 레이아웃 상태를 state로 저장시키기
+  let [레이아웃, 레이아웃변경] = useState(0);
+
+  let [게시글배열, 게시글배열변경함수] = useState(초기게시글);
      
 
-    function 제목2변경 (){
+  function 제목2변경 (){
+    // 제목2 = "KH C CLASS"; // 단순 대입연산자를 활용하는 경우 state값의 변경점을 reactDom이 알지못함
+    // console.log(제목2);
+    제목변경함수("KH C CLASS"); //useState의 두번째 매개변수로 전달받은 함수를 통해 변경 시 화면이 재랜더링됨
+  }
 
-      // 제목2 = "KH C CLASS"; // 단순 대입연산자를 활용하는 경우 state값의 변경점을 reactDom이 알지못함
-      // console.log(제목2);
+  let [상세보기, 상세보기변경] = useState(null);
+  let 등록페이지url = "/insert";
 
-      제목변경함수("KH C CLASS"); //useState의 두번째 매개변수로 전달받은 함수를 통해 변경 시 화면이 재랜더링됨
-    }
-
-    // function 게시글삭제(삭제할글번호){ } 랑 똑같음
-    const 게시글삭제 = (삭제할글번호) => {
-
-      // 1) 배열에서 삭제를 담당하는 메서드 Array.splice(인덱스위치, 삭제할개수)
-      // for(let i = 0; i<게시글배열.length; i++){
-      //   if(게시글배열[i].글번호 == 삭제할글번호){
-      //     게시글배열.splice(i, 1);
-      //     break;
-      //   }
-      // }
-
-      // ...전개연산자 (값들을 쭉 펼친다)  - 깊은복사를 할 때 사용함
-      // ...[a,b,c] -> a,b,c // ...{key : value, key : value} -> key : value, key : value  
-      // Array.from(게시글배열), 게시글배열.slice(), concat함수 등...
-
-      게시글배열변경함수([...게시글배열]); // 값이 제거된 배열을 넣어줬음에도 랜더링이 이루어지지 않음
-      // 주솟값 자체는 변하지 않아서 랜더링이 이루어지지 않음
-
-      // 2) 게시글 배열에서 글번호와 일치하지 않는 게시글만 필터링하기 (filter함수 이용)
-      let 필터링배열 = 게시글배열.filter( (게시글) => 게시글.글번호 !== 삭제할글번호  ) // 지금 게시글번호와, 삭제할글번호가 일치하지 않을 때만 반환
-      게시글배열변경함수(필터링배열);  //필터함수가 깊은복사함수임, 그래서 이렇게만 써도 됨
-
-     }
-
-
-    
-
-
-
-
-
+  let 모든데이터 = {
+      게시글배열 ,
+      게시글배열변경함수 ,
+      상세보기 ,
+      상세보기변경
+  }
 
   return (
     <div className="App">
@@ -98,60 +88,25 @@ function App() {
           * 주의점 : 무조건 함수 자료형 값만 넣어줘야함. 함수 호출한 결과값 넣으면 의미 없음
         */}
 
-        {/* <button onClick={ () => console.log(1) }>제목변경테스트</button> */}
-        <button onClick={ 제목2변경 }>제목변경테스트</button>
-        <button>게시판</button>
-        <button>등록</button>
+        <Link to="/list">게시판</Link>
+        <Link to={등록페이지url}>등록</Link>
       </div>
+        <Routes>
 
-      <div className='outer'>
-        <br/>
-        <h2>일반게시판</h2>
-
-        <table className='list-table'>
-          <thead>
-            { /* 번호, 제목, 작성자, 작성일, 삭제에 
-            각각 크기 10% , 40%, 20%, 20%, 10% 인라인으로 스타일 부여해주기*/ }
-            <tr>
-              <th style={ {width : "10%"}}>번호</th>
-              <th style={ {width : "40%"}}>제목</th>
-              <th style={ {width : "20%"}}>작성자</th>
-              <th style={ {width : "20%"}}>작성일</th>
-              <th style={ {width : 7 }}>삭제</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              /*
-                Array내부의 map함수 사용 예정 
-                [1,2,3].forEach(함수) - forEach :  배열의 길이만큼 반복해줌 
-                [1,2,3].map(function() {return 1} )  => [1,1,1] - map : 배열의 길이만큼 반복하면서 return 되는 값을 배열에 담아서 반환해줌
-              */
-              
-              게시글배열.map(function(게시글, 인덱스) {
-                return (
-                  <tr key={인덱스}>
-                      <td>{게시글.글번호}</td>
-                      <td>{게시글.글제목}</td>
-                      <td>{게시글.작성자}</td>
-                      <td>{게시글.작성일}</td>
-                      <td> <button onClick={() => {게시글삭제(게시글.글번호)} }>삭제</button> </td>
-                      {/*
-                        게시글 삭제 기능
-                        1. 삭제하고자 하는 게시글을 특정할 수 있어야 함
-                        2. 게시글 배열에서 삭제하고자 하는 게시글을 없애준다.
-                        3. 내가 선택한 게시글이 제거된 게시글 배열로 화면이 랜더링 되어야 함
-                      */}
-                  </tr>
-                  )
-              })
-            }
-          </tbody>
-        </table>
-      </div>
-
-      
-          <BoardInsert 게시글배열={게시글배열} 게시글배열변경함수={게시글배열변경함수}/>
+          <Route path='/' element={<BoardList 모든데이터={모든데이터}/> } />
+          <Route path='/list' element={ <BoardList 모든데이터={모든데이터} />} />
+          <Route path='/insert' element={ <BoardInsert  모든데이터={모든데이터}/> } />
+          <Route path='/detail' element={  <BoardDetail 모든데이터={모든데이터} /> } />
+          <Route path='/update' element={  <BoardUpdate  모든데이터={모든데이터} /> } />
+          
+          <Route path='*' element={
+              <div>
+                <h1 style={{color : "red"}}>존재하지 않는 페이지입니다.</h1>
+                <Link too="/">사이트로돌아가기</Link>
+              </div> 
+          }/> 
+          {/* 위에서 안걸린 페이지를 모든페이지(*) 에러페이지로 넘김. */}
+        </Routes>
     </div>
   );
 }
