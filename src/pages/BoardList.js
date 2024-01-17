@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function BoardList(props){
 
-    let {게시글배열, 게시글배열변경함수,  상세보기변경} = props.모든데이터;
+    let {게시글배열, 게시글배열변경함수} = props.모든데이터;
 
     const navigate = useNavigate();
 
@@ -24,11 +24,18 @@ export default function BoardList(props){
           return 게시글.글번호 !== 삭제할글번호;
         });
         게시글배열변경함수(필터링배열);
+        
       }
+      /*
+          REST(Represntational State Transfer) : URL과 전송방법(Method)을 활용하여 작업내용을
+          url창에 표현하고, 필요한 상태를 전달하는 모든 행위를 의미한다.
+          /board/detail -> /board/detail/5(get)
+
+          프론트와 백엔드가 나뉘어져 있는 회사면 REST한 방식으로 개발한다.
+      */ 
 
     return (
-        <div className='outer'>
-        <br />
+       <>
         <h2>일반게시판</h2>
         <table className='list-table'>
           <thead>
@@ -48,8 +55,9 @@ export default function BoardList(props){
              게시글배열.map(function( 게시글, 인덱스) {
               return (
                 <tr key={인덱스} onClick={() => {
-                    navigate('/detail');
-                    상세보기변경(게시글);
+                    navigate('/board/detail/'+게시글.글번호);
+                    // 상세보기변경(게시글);
+                    
                 }}>
                   <td>{게시글.글번호}</td>
                   <td>{게시글.글제목}</td>
@@ -70,6 +78,6 @@ export default function BoardList(props){
             }
           </tbody>
         </table>
-      </div>
+        </>
     )
 }

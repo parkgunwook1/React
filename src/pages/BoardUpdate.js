@@ -1,11 +1,16 @@
 import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function BoardUpdate({모든데이터}){
     //상세보기 , 배열
-    let {게시글배열, 게시글배열변경함수, 상세보기, 상세보기변경} = 모든데이터;
+    let {게시글배열, 게시글배열변경함수} = 모든데이터;
+
+    let {bno} = useParams(); // {bno : 1}
+    let 상세보기 = 게시글배열.find( 게시글 => 게시글.글번호 == bno )
 
     let [입력값, 입력값변경] = useState (상세보기);
 
+    const navigate = useNavigate();
 
     function 게시글수정(){
        // 값이 입력 안됐을 때 작성 안되게 if문 작성
@@ -25,7 +30,8 @@ export default function BoardUpdate({모든데이터}){
             return 게시글;
        })
         게시글배열변경함수([...변경된게시글배열]);
-        상세보기변경(입력값);
+        // 상세보기변경(입력값);
+        navigate('/board/detail/' + 입력값.글번호);
     }
 
 
@@ -34,8 +40,7 @@ export default function BoardUpdate({모든데이터}){
         입력값변경({...입력값, [name] : value});
       }
     return (
-        <div className='outer'>
-        <br />
+        <>
         <h2>수정</h2>
         <table className='enroll-table'>
           <tr>
@@ -74,9 +79,10 @@ export default function BoardUpdate({모든데이터}){
           <td><button onClick={(e) => {
                     e.stopPropagation();
                     게시글수정(상세보기.글번호)
+                    
                     }}>수정</button></td>
                 </tr>
         </table>
-    </div>
+        </>
   )
 }

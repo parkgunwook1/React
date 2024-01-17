@@ -2,7 +2,7 @@
 //콘솔창에 불필요한 에러를 지우는 코드
 
 import './App.css';
-import {useState} from 'react';
+import {createContext, useEffect, useState} from 'react';
 
 //import data from './data'; 
 import 초기게시글 from './data';  //default옵션으로 export한 경우 변수명을 다르게 가져올 수 있음
@@ -12,9 +12,72 @@ import BoardList from './pages/BoardList';
 import BoardDetail from './pages/BoardDetail';
 import BoardUpdate from './pages/BoardUpdate';
 import { Route, Routes, Link } from 'react-router-dom';
+import Outer from './components/Outer';
+import axios from 'axios';
+
+export let Context = createContext(); // state저장소
 
 
 function App() {
+
+  /*
+    useEffect : 컴포넌트가 렌더링될 때를 감지하여 렌더링된 "이후" 실행할 코드를 기술하는 함수
+    컴포넌트에는 기본적으로 lifeCycle이라는 개념이 있는데,
+    컴포넌트가 처음 로딩되는 시기를 monut
+    state 변경에 의해 컴포넌트가 재 렌더링 될때는 update 컴포넌트가 교체/소멸 될때는 umount라고 부름
+    useEffect는 mount, update, unmount되는 시점에 각각 끼어들어서 내가 실행하고자 하는 코드를 추가할 수 있다.
+
+    사용방법
+    useEffect( function() => {
+      렌더링이 완료된 후!!! 실행할 코드
+
+      return 컴포넌트가 재렌더링되거나, 소멸할 때 실행할 "함수"
+    } , [의존성 목록]) //state값들을 배열형태로 넣어줌. 의존성목록에 들어간 state 변수의 값이 바뀌면(update)
+      useEffect내부의 함수가 다시 호출한다.
+  */
+
+   
+  /*
+    ContextApi : 복잡한 컴포넌트구조에서 state상태를 손쉽게 전달하도록 도와주는 문법.
+    ex) App의 자식 BoardDetail의 자식 BoardDetail에 데이터를 전달해줘야한다?
+    props를 중첩으로 전달, 또 전달, 또 전달해주는 코드를 짜줘야함.
+  */
+
+    let [게시글배열, 게시글배열변경함수] = useState([]); 
+
+  useEffect(function(){
+
+    /*
+        axios => react에서 가장 많이 사용되는 비동기함수를 지원하는 라이브러리
+
+        axios.get/post('url경로', {전달한데이터})
+        .then( function (result) {
+          // 요청 성공시 실행할 코드
+        })
+        .then
+        .then..
+        .catch(function(error){
+          // 요청 실패시 실행할 코드
+        })
+    */
+   // axios는 json 파싱 알아서 해준다.
+   // axios.get('https://my-json-server.typicode.com/alsrudals2013/react/board')
+      axios.get("/data/data.json",{data: "필요한데이터 아무거나 key:value 형태로 넣어주기"})
+    .then(
+        function(result){
+          게시글배열변경함수(result.data);
+            // console.log(result.data);
+        }
+    ).catch((error) => console.log(error.response))
+
+    // console.log('useEffect함수 내부'); // 렌더링이 완료된 후 실행. 
+  },[]);
+  /*
+    의존성 목록을 빈배열로 두는경우 첫 로딩시에만 useEffect함수 내부의 내용이 실행됨
+    의존성 목록에 내가 원하는 데이터만 지정하는경우 해당 데이터가 바뀔때만 useEffect 함수 내부의 내용이 실행됨.
+  */
+
+   console.log('useEffect함수 외부');
   
   // state 문법
   let [제목2, 제목변경함수]  = useState('KH E CLASS'); 
@@ -48,7 +111,7 @@ function App() {
   // 2) 레이아웃 상태를 state로 저장시키기
   let [레이아웃, 레이아웃변경] = useState(0);
 
-  let [게시글배열, 게시글배열변경함수] = useState(초기게시글);
+  
      
 
   function 제목2변경 (){
@@ -57,14 +120,12 @@ function App() {
     제목변경함수("KH C CLASS"); //useState의 두번째 매개변수로 전달받은 함수를 통해 변경 시 화면이 재랜더링됨
   }
 
-  let [상세보기, 상세보기변경] = useState(null);
+  // let [상세보기, 상세보기변경] = useState(null);
   let 등록페이지url = "/insert";
 
   let 모든데이터 = {
       게시글배열 ,
-      게시글배열변경함수 ,
-      상세보기 ,
-      상세보기변경
+      게시글배열변경함수 
   }
 
   return (
@@ -88,25 +149,37 @@ function App() {
           * 주의점 : 무조건 함수 자료형 값만 넣어줘야함. 함수 호출한 결과값 넣으면 의미 없음
         */}
 
-        <Link to="/list">게시판</Link>
-        <Link to={등록페이지url}>등록</Link>
+        <Link to="board/list">게시판</Link>
+        <Link to={"/board" + 등록페이지url}>등록</Link>
       </div>
-        <Routes>
+        <Context.Provider value={ {모든데이터} }>  
+          <Routes>
+            <Route path='/' element={<BoardList 모든데이터={모든데이터}/> } />
+            <Route path="/board" element= {<Outer />} >
 
-          <Route path='/' element={<BoardList 모든데이터={모든데이터}/> } />
-          <Route path='/list' element={ <BoardList 모든데이터={모든데이터} />} />
-          <Route path='/insert' element={ <BoardInsert  모든데이터={모든데이터}/> } />
-          <Route path='/detail' element={  <BoardDetail 모든데이터={모든데이터} /> } />
-          <Route path='/update' element={  <BoardUpdate  모든데이터={모든데이터} /> } />
-          
-          <Route path='*' element={
-              <div>
-                <h1 style={{color : "red"}}>존재하지 않는 페이지입니다.</h1>
-                <Link too="/">사이트로돌아가기</Link>
-              </div> 
-          }/> 
-          {/* 위에서 안걸린 페이지를 모든페이지(*) 에러페이지로 넘김. */}
-        </Routes>
+              {/* /board/list */}
+            <Route path='list' element={ <BoardList 모든데이터={모든데이터} />} />
+            <Route path='insert' element={ <BoardInsert  모든데이터={모든데이터}/> } />
+            <Route path='detail/:bno' element={  <BoardDetail 모든데이터={모든데이터} /> } />
+
+            {/* 
+                라우터 파라미터 문법
+                /:매개변수명
+                중첩으로 여러개 작성도 가능
+                detail/:bno => REST하게 게시글 1,2,3.. 정보제공 해줄 수 있다.
+            */}
+            <Route path='update/:bno' element={  <BoardUpdate  모든데이터={모든데이터} /> } />
+            </Route>
+
+            <Route path='*' element={
+                <div>
+                  <h1 style={{color : "red"}}>존재하지 않는 페이지입니다.</h1>
+                  <Link too="/">사이트로돌아가기</Link>
+                </div> 
+            }/> 
+            {/* 위에서 안걸린 페이지를 모든페이지(*) 에러페이지로 넘김. */}
+          </Routes>
+        </Context.Provider>
     </div>
   );
 }

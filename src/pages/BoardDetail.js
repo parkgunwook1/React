@@ -1,17 +1,44 @@
+import { useContext, useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+
+import {Context} from '../App';
 
  {/* 게시판상세보기 페이지 만들기 실습 */}
  export default function BoardDetail({모든데이터}) {
+    // URL창에 글번호 뽑아오는법.
+    // 
+    const {bno} = useParams(); // /:파라미터명  
     
-  let {상세보기} = 모든데이터;
-  return (
+    let 테스트 = useContext(Context);
+    console.log(테스트);
 
+    // 상세보기 불러오는 코드 변경
+    // bno를 활용해서 게시글 배열에서 내가 bno와 일치하는 게시글을 찾아서 넣어주기
+  let 상세보기 = 모든데이터.게시글배열.find( function(게시글) {
+      return 게시글.글번호 == bno;
+  });
+
+  //useEffect 테스트
+  let [count, setCount] = useState(0);
+  useEffect(function (){
     
-    <div className='outer'>
-            <br />
+    console.log("첫 로딩 업데이트 이후 실행",count);
+    let time = setTimeout(() => {
+      console.log(count);
+      setCount(count+1);
+    }, 2000); // 2초가 지나면 콜백함수 실행
+    return function() {
+      clearTimeout(time);
+    }
+  })
+
+  return (
+            <>
+      
             <h2>게시판상세보기</h2>
             
             <table className='detail-table'>
-              <tr>
+              <tr onClick={()=> setCount(count+1)}>
                게시글배열.글번호
                 <th colSpan={4}>{상세보기.글제목}</th>
               </tr>
@@ -27,8 +54,8 @@
               </tr>
             </table>
             <div className='btn-area'>
-              <button>수정</button>
+              <Link to={'/board/update/'+상세보기.글번호}>수정</Link>
             </div>
-          </div>
+          </>
     )
 }

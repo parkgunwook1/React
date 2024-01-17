@@ -1,5 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 export default function BoardInsert({모든데이터}){
+
+  const navigate = useNavigate();
+
+
     //console.log(props);
     let {게시글배열 , 게시글배열변경함수} = 모든데이터;
     //let 게시글배열 = props.게시글배열;
@@ -49,14 +54,15 @@ export default function BoardInsert({모든데이터}){
       글내용 : "",
       작성자 : ""
     })
+    navigate('/board/list');
+
   }
   function onInputHandler(e){
     let {name , value} = e.target
     입력값변경({...입력값, [name] : value});
   }
     return (
-        <div className='outer'>
-          <br />
+        <>
           <h2>등록</h2>
           <table className='enroll-table'>
             <tr>
@@ -102,7 +108,7 @@ export default function BoardInsert({모든데이터}){
               <th colSpan={4}><button onClick={게시글등록}>등록</button></th>
             </tr>
           </table>
-      </div>
+          </>
     )
 }
 //export default BoardInsert;
