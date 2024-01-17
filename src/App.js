@@ -14,11 +14,27 @@ import BoardUpdate from './pages/BoardUpdate';
 import { Route, Routes, Link } from 'react-router-dom';
 import Outer from './components/Outer';
 import axios from 'axios';
+import {useDispatch, useSelector} from 'react-redux';
+import {프로필랜덤변경, 로그아웃} from './store';
+import LoginModal from './components/LoginModal';
 
 export let Context = createContext(); // state저장소
 
 
 function App() {
+
+  
+
+  /*
+      sotre에서 데이터 꺼내오기
+      useSelector : store에 저장되어있는 state를 꺼내오는 함수
+      let user = useSelector( (state) => {return state} );
+  */
+      let user = useSelector( ({user}) => {return user} );
+      let 전송 = useDispatch();
+
+      let [LoginModal , setLoginModal] = useState(false);
+      // console.log(user);
 
   /*
     useEffect : 컴포넌트가 렌더링될 때를 감지하여 렌더링된 "이후" 실행할 코드를 기술하는 함수
@@ -128,6 +144,13 @@ function App() {
       게시글배열변경함수 
   }
 
+  function 모달창열기(){
+    setLoginModal(true);
+  }
+  function 모달창닫기(){
+    setLoginModal(false);
+  }
+
   return (
     <div className="App">
       { /* jsx문법 내부에서의 주석
@@ -136,12 +159,33 @@ function App() {
           js문법 내부에 html코드를 작성할 수 있는 문법을 jsx문법이라고 함
           리액트에서 ui를 구성할 때 보편적으로 사용되는 방법으로 복잡한 코드를 짤 필요 없이,
           동적으로 추가되는 dom요소를 단순 코드선언으로 생성할 수 있게 도와줌
+
+          로그아웃기능 만들기 -> user state를 없는것으로 만들기
+          로그아웃시 아래 유저정보대신 로그인버튼이 보이게 작업
       */ }
 
       <div className="header">
+          <div className='header-1'>
         <h3 style={ {fontWeight : "bolder"} }>  {제목2}  </h3>
       </div>
-
+      <div className="header-2">
+  
+    {
+    user ? (
+      <>
+      <img src={user.profile} onClick={() => 전송(프로필랜덤변경())} />
+      <div className="user-info">
+        <span className="user-nickname">{user.nickname}</span>
+        <span className="user-email">{user.email}</span>
+      </div>
+      <button onClick={() => 전송(로그아웃())}>로그아웃</button>
+    </>
+    ) : <button onClick={() => 모달창열기()}>로그인</button>    
+  }
+  
+    </div>
+    
+      </div>
       <div className='nav'>
         {/* 
           react방식 event부여
@@ -179,9 +223,11 @@ function App() {
             }/> 
             {/* 위에서 안걸린 페이지를 모든페이지(*) 에러페이지로 넘김. */}
           </Routes>
+          {
+            LoginModal && <LoginModal 모달창닫기={모달창닫기}/> 
+          }
         </Context.Provider>
     </div>
   );
 }
-
 export default App;
