@@ -1,0 +1,42 @@
+.board-insert {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .board-insert h2 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+  }
+  
+  .board-insert .input {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .board-insert label {
+    font-size: 1.2em;
+  }
+  
+  .board-insert input {
+    padding: 10px;
+    font-size: 1em;
+  }
+  
+  .board-insert button {
+    padding: 10px;
+    font-size: 1.2em;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .board-insert button:hover {
+    background-color: #0056b3;
+  }

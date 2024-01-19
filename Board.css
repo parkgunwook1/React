@@ -1,0 +1,66 @@
+/* Board.css */
+
+.nav {
+    background-color: #958680c6; /* 네비게이션 바 배경 색상 */
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .nav button {
+    margin: 0 10px;
+    padding: 5px 10px;
+    color: #fff;
+    background-color: #3e444b;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .outer {
+    margin: 90px;
+  }
+  
+  h2 {
+    color: #2a2c2f;
+    text-align: center; 
+    /* 가운데 정렬 text-align: center */
+  }
+  
+  .list-table {
+    width: 80%; /* 테이블의 너비를 조절 */
+    margin: 10px auto; /* 위아래 여백은 20px, 좌우 여백은 자동으로 가운데 정렬 */
+    border-collapse: collapse;
+}
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  th {
+    background-color: #f2f2f2;
+  }
+  
+  button {
+    background-color: #514142;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #e1d9d9;
+  }
+  .input {
+    text-align: center; /* 버튼 가운데 정렬 */
+    margin-top: 20px; /* 위 여백 추가 */
+  }
+  
+  .input button {
+    padding: 10px 20px; /* 버튼의 내부 여백 설정 (크기 조절) */
+    margin: 10px auto;
+    font-size: 16px; /* 버튼 텍스트 크기 설정 */
+  }
+  
+  

@@ -1,0 +1,64 @@
+.header {
+    background-color: #333; /* 헤더 배경색 */
+    color: #fff; /* 헤더 텍스트 색상 */
+    padding: 20px 15px; /* 헤더 안쪽 여백 */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-image: url('https://media.istockphoto.com/id/1186053799/ko/%EC%82%AC%EC%A7%84/%ED%97%A4%EB%8D%94-%EA%B7%B8%EB%A0%88%EC%9D%B4-%EB%8B%88%ED%8A%B8-%ED%8C%A8%EB%B8%8C%EB%A6%AD-%ED%85%8D%EC%8A%A4%EC%B2%98-%EB%B0%B0%EA%B2%BD.jpg?s=612x612&w=0&k=20&c=JWX-iOFy89dgRWumUP89ZYxL6SFKUscVeaFcp4ZJkgg=');
+  }
+  
+  .logo {
+    background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5N1n98X52z3Bn3GSh-Kcx8Ndoo3VsP_hOquaI3O5X0bZR0dNMQExBAkD-AEk9lZvCSGo&usqp=CAU');
+    background-size: contain; /* 이미지를 요소에 맞게 조절합니다. */
+    background-repeat: no-repeat; /* 이미지 반복을 막습니다. */
+    width: 200px; /* 로고의 너비 조절 */
+    height: 100px; /* 로고의 높이 조절 */
+    text-indent: -9999px; /* 텍스트를 숨깁니다. */
+}
+  
+  .navbar {
+    display: flex;
+  }
+  
+  .navbar ul {
+    list-style: none;
+    display: flex;
+  }
+  
+  .navbar li {
+    margin: 0 10px;
+  }
+  
+  .a {
+    color: white;
+    text-decoration: none; /* 링크 밑줄 제거 */
+    padding: 10px; /* 링크 여백 조절 */
+    margin: 0 px; /* 링크 간격 조절 */
+  }
+  
+  /* 활성 링크 스타일 */
+  .a.active {
+    font-weight: bold; /* 활성 링크 텍스트 굵게 표시 */
+  }
+
+  /* 추가: 반응형 스타일 */
+  @media (max-width: 768px) {
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .navbar {
+      margin-top: 10px;
+    }
+  
+    .navbar ul {
+      flex-direction: column;
+    }
+  
+    .navbar li {
+      margin: 5px 0;
+    }
+  }
+  
